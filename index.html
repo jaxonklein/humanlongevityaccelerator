@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Human Longevity Accelerator</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:    #0f1117;
+      --bg:     #f8f6f2;
+      --muted:  #8a8680;
+      --accent: #2a6e4e;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Georgia', serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: clamp(2rem, 6vw, 5rem);
+      text-align: center;
+    }
+
+    .mark {
+      width: 52px;
+      height: 52px;
+      margin-bottom: 2rem;
+      opacity: 0.75;
+    }
+
+    h1 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: normal;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 1.25rem;
+    }
+
+    p {
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      color: var(--muted);
+      max-width: 38ch;
+      line-height: 1.7;
+    }
+
+    footer {
+      margin-top: 3rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+  </style>
+</head>
+<body>
+  <svg class="mark" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="26" cy="26" r="25" stroke="var(--accent)" stroke-width="1.5"/>
+    <path d="M16 26 C16 18 22 13 26 13 C30 13 36 18 36 26 C36 34 30 39 26 39 C22 39 16 34 16 26Z" stroke="var(--accent)" stroke-width="1.5" fill="none"/>
+    <line x1="26" y1="13" x2="26" y2="39" stroke="var(--accent)" stroke-width="1.5"/>
+    <line x1="16" y1="26" x2="36" y2="26" stroke="var(--accent)" stroke-width="1.5"/>
+  </svg>
+
+  <h1>Human Longevity Accelerator</h1>
+  <p>Advancing the science and systems that extend healthy human life.</p>
+
+  <footer>humanlongevityaccelerator.com</footer>
+</body>
+</html>
