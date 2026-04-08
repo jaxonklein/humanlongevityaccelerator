@@ -1,77 +1,1296 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Human Longevity Accelerator</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Human Longevity Accelerator — The lab that shows its work.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --slate:    #1a2744;
+    --slate-dk: #0f1a2e;
+    --sand:     #e8dfc8;
+    --sand-lt:  #f2ede0;
+    --green:    #4a7c59;
+    --green-lt: #6a9e78;
+    --ink:      #1c1c1e;
+    --off:      #f5f5f0;
+    --mid:      #6b6b6e;
+    --border:   #d8d3c8;
+    --mono:     'DM Mono', monospace;
+    --sans:     'Space Grotesk', sans-serif;
+    --serif:    'Lora', Georgia, serif;
+  }
 
-    :root {
-      --ink:    #0f1117;
-      --bg:     #f8f6f2;
-      --muted:  #8a8680;
-      --accent: #2a6e4e;
-    }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    html, body {
-      height: 100%;
-      font-family: 'Georgia', serif;
-      background: var(--bg);
-      color: var(--ink);
-    }
+  html { scroll-behavior: smooth; }
 
-    body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: clamp(2rem, 6vw, 5rem);
-      text-align: center;
-    }
+  body {
+    font-family: var(--serif);
+    background: var(--off);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
 
-    .mark {
-      width: 52px;
-      height: 52px;
-      margin-bottom: 2rem;
-      opacity: 0.75;
-    }
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(15, 26, 46, 0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(232, 223, 200, 0.12);
+    padding: 0 40px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
-    h1 {
-      font-size: clamp(1.6rem, 4vw, 2.4rem);
-      font-weight: normal;
-      letter-spacing: -0.02em;
-      line-height: 1.2;
-      margin-bottom: 1.25rem;
-    }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    cursor: pointer;
+  }
 
-    p {
-      font-size: clamp(0.95rem, 2vw, 1.1rem);
-      color: var(--muted);
-      max-width: 38ch;
-      line-height: 1.7;
-    }
+  .nav-logo svg {
+    color: var(--sand);
+    flex-shrink: 0;
+  }
 
-    footer {
-      margin-top: 3rem;
-      font-size: 0.8rem;
-      color: var(--muted);
-      letter-spacing: 0.04em;
-    }
-  </style>
+  .nav-wordmark {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--sand);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(232, 223, 200, 0.55);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover,
+  .nav-links a.active {
+    color: var(--sand);
+  }
+
+  /* ── PAGE SYSTEM ── */
+  .page {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    padding-top: 60px;
+    min-height: 100vh;
+  }
+
+  .page.active {
+    display: block;
+  }
+
+  .page.visible {
+    opacity: 1;
+  }
+
+  /* ── SHARED ── */
+  .section {
+    padding: 100px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--sans);
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0;
+  }
+
+  /* ── HOME: HERO ── */
+  .hero {
+    background: var(--slate-dk);
+    min-height: 92vh;
+    display: flex;
+    align-items: center;
+    padding: 80px 40px 100px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 70% 40%, rgba(74, 124, 89, 0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 20% 70%, rgba(26, 39, 68, 0.6) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 80px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--green-lt);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--green-lt);
+    opacity: 0.6;
+  }
+
+  .hero h1 {
+    font-size: clamp(48px, 6vw, 88px);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -1.5px;
+    color: var(--sand);
+    margin-bottom: 32px;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: #fff;
+    font-weight: 500;
+  }
+
+  .hero-sub {
+    font-family: var(--serif);
+    font-size: 20px;
+    line-height: 1.65;
+    color: rgba(232, 223, 200, 0.65);
+    max-width: 560px;
+    margin-bottom: 48px;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--slate-dk);
+    background: var(--sand);
+    padding: 14px 28px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s, gap 0.2s;
+    border: none;
+  }
+
+  .hero-cta:hover {
+    background: #fff;
+    gap: 16px;
+  }
+
+  .hero-cta .arrow {
+    font-size: 16px;
+    transition: transform 0.2s;
+  }
+
+  .hero-logo-large {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.18;
+  }
+
+  /* ── HOME: DUAL NARRATIVE ── */
+  .dual-narrative {
+    background: var(--off);
+    padding: 100px 40px;
+  }
+
+  .dual-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .dual-header {
+    margin-bottom: 64px;
+  }
+
+  .dual-header h2 {
+    font-size: 36px;
+    font-weight: 400;
+    letter-spacing: -0.5px;
+    color: var(--ink);
+    line-height: 1.2;
+    max-width: 480px;
+  }
+
+  .dual-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+  }
+
+  .dual-col {
+    background: var(--off);
+    padding: 56px 48px;
+  }
+
+  .dual-col:first-child {
+    border-right: none;
+  }
+
+  .dual-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .dual-col h3 {
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: -0.3px;
+    color: var(--ink);
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+
+  .dual-col p {
+    font-size: 17px;
+    line-height: 1.75;
+    color: #4a4a4d;
+  }
+
+  .dual-col p + p {
+    margin-top: 16px;
+  }
+
+  .patient-indicator {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--sand-lt);
+    background: var(--slate);
+    padding: 4px 10px;
+    margin-top: 24px;
+  }
+
+  /* ── HOME: VENTURES ── */
+  .ventures-section {
+    background: var(--sand-lt);
+    padding: 100px 40px;
+  }
+
+  .ventures-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .ventures-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 56px;
+  }
+
+  .ventures-header h2 {
+    font-size: 36px;
+    font-weight: 400;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+  }
+
+  .ventures-count {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--mid);
+    text-transform: uppercase;
+  }
+
+  .ventures-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: var(--border);
+  }
+
+  .venture-card {
+    background: var(--off);
+    padding: 36px 28px 40px;
+    position: relative;
+    transition: background 0.2s;
+  }
+
+  .venture-card:hover {
+    background: #fff;
+  }
+
+  .venture-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--green);
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .venture-card h4 {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+    color: var(--ink);
+    line-height: 1.3;
+    margin-bottom: 14px;
+  }
+
+  .venture-card p {
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--mid);
+    font-weight: 400;
+  }
+
+  .venture-trait {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sand);
+    background: var(--slate);
+    padding: 3px 8px;
+    display: inline-block;
+    margin-top: 20px;
+  }
+
+  /* ── HOME: FOOTER QUOTE ── */
+  .footer-quote {
+    background: var(--slate-dk);
+    padding: 80px 40px;
+    text-align: center;
+  }
+
+  .footer-quote blockquote {
+    font-family: var(--serif);
+    font-size: clamp(22px, 3vw, 34px);
+    font-weight: 400;
+    font-style: italic;
+    color: rgba(232, 223, 200, 0.75);
+    max-width: 760px;
+    margin: 0 auto 20px;
+    line-height: 1.5;
+  }
+
+  .footer-quote cite {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(232, 223, 200, 0.3);
+    font-style: normal;
+  }
+
+  /* ── ABOUT ── */
+  .about-hero {
+    background: var(--slate);
+    padding: 100px 40px 80px;
+    color: var(--sand);
+  }
+
+  .about-hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .about-hero h1 {
+    font-size: clamp(36px, 4vw, 58px);
+    font-weight: 300;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    color: #fff;
+    margin-bottom: 24px;
+  }
+
+  .about-hero p {
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.75;
+    color: rgba(232, 223, 200, 0.7);
+  }
+
+  .about-hero p + p { margin-top: 16px; }
+
+  .what-were-not {
+    padding-top: 40px;
+  }
+
+  .what-were-not h3 {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(232, 223, 200, 0.4);
+    margin-bottom: 24px;
+  }
+
+  .not-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .not-list li {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: rgba(232, 223, 200, 0.65);
+    padding-left: 20px;
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .not-list li::before {
+    content: '×';
+    position: absolute;
+    left: 0;
+    color: rgba(232, 223, 200, 0.25);
+    font-size: 13px;
+  }
+
+  /* Exa section */
+  .exa-section {
+    background: var(--off);
+    padding: 100px 40px;
+  }
+
+  .exa-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .exa-intro {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    margin-bottom: 72px;
+    align-items: start;
+  }
+
+  .exa-intro h2 {
+    font-size: 36px;
+    font-weight: 400;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+
+  .exa-intro p {
+    font-size: 17px;
+    line-height: 1.75;
+    color: #4a4a4d;
+  }
+
+  .exa-intro p + p { margin-top: 16px; }
+
+  .exa-principles {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+  }
+
+  .exa-principle {
+    background: var(--off);
+    padding: 36px 32px;
+  }
+
+  .exa-principle-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--green);
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .exa-principle h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 12px;
+    letter-spacing: -0.2px;
+  }
+
+  .exa-principle p {
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--mid);
+  }
+
+  /* Voice section */
+  .voice-section {
+    background: var(--sand-lt);
+    padding: 80px 40px;
+  }
+
+  .voice-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .voice-inner h2 {
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -0.3px;
+    margin-bottom: 48px;
+    color: var(--ink);
+  }
+
+  .voice-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+  }
+
+  .voice-item {
+    border-top: 2px solid var(--slate);
+    padding-top: 20px;
+  }
+
+  .voice-item h4 {
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--slate);
+    margin-bottom: 10px;
+  }
+
+  .voice-item p {
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--mid);
+  }
+
+  /* ── CHARTER ── */
+  .charter-hero {
+    background: var(--slate-dk);
+    padding: 100px 40px 80px;
+  }
+
+  .charter-hero-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .charter-hero h1 {
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 300;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    color: #fff;
+    margin-bottom: 28px;
+  }
+
+  .charter-hero p {
+    font-family: var(--serif);
+    font-size: 20px;
+    line-height: 1.7;
+    color: rgba(232, 223, 200, 0.65);
+    max-width: 580px;
+    margin: 0 auto;
+  }
+
+  .charter-commitments {
+    background: var(--off);
+    padding: 100px 40px;
+  }
+
+  .charter-inner {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .commitment {
+    padding: 56px 0;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+
+  .commitment:first-child {
+    padding-top: 0;
+  }
+
+  .commitment:last-child {
+    border-bottom: none;
+  }
+
+  .commitment-num {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--green);
+    letter-spacing: 1px;
+    padding-top: 4px;
+  }
+
+  .commitment-body h3 {
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -0.3px;
+    color: var(--ink);
+    margin-bottom: 16px;
+    line-height: 1.25;
+  }
+
+  .commitment-body p {
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.75;
+    color: #4a4a4d;
+    margin-bottom: 20px;
+  }
+
+  .grade-demo {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  .grade {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    color: var(--ink);
+    background: #fff;
+    letter-spacing: 1px;
+  }
+
+  .grade.strong { border-color: var(--green); color: var(--green); }
+  .grade.mid { border-color: var(--slate); color: var(--slate); }
+  .grade.weak { border-color: #b08b5a; color: #b08b5a; }
+
+  .exa-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--sand-lt);
+    background: var(--slate);
+    padding: 6px 14px;
+    margin-top: 4px;
+  }
+
+  .exa-badge::before {
+    content: '⬡';
+    font-size: 10px;
+    opacity: 0.6;
+  }
+
+  .charter-signoff {
+    background: var(--slate);
+    padding: 80px 40px;
+    text-align: center;
+  }
+
+  .charter-signoff p {
+    font-family: var(--serif);
+    font-size: clamp(18px, 2.5vw, 26px);
+    font-style: italic;
+    color: rgba(232, 223, 200, 0.75);
+    max-width: 640px;
+    margin: 0 auto 28px;
+    line-height: 1.55;
+  }
+
+  .charter-signoff .signoff-sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(232, 223, 200, 0.3);
+    font-style: normal;
+  }
+
+  /* ── SHARED FOOTER ── */
+  .site-footer {
+    background: var(--slate-dk);
+    padding: 40px;
+    border-top: 1px solid rgba(232, 223, 200, 0.08);
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .footer-wordmark {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(232, 223, 200, 0.4);
+  }
+
+  .footer-right {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: rgba(232, 223, 200, 0.2);
+    letter-spacing: 1px;
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 900px) {
+    nav { padding: 0 20px; }
+    .nav-links { gap: 20px; }
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-logo-large { display: none; }
+    .dual-cols { grid-template-columns: 1fr; }
+    .ventures-grid { grid-template-columns: repeat(2, 1fr); }
+    .venture-card:last-child { grid-column: 1 / -1; }
+    .about-hero-inner { grid-template-columns: 1fr; }
+    .exa-intro { grid-template-columns: 1fr; gap: 32px; }
+    .exa-principles { grid-template-columns: repeat(2, 1fr); }
+    .voice-grid { grid-template-columns: repeat(2, 1fr); }
+    .commitment { grid-template-columns: 1fr; gap: 12px; }
+    .footer-inner { flex-direction: column; gap: 12px; text-align: center; }
+    .section { padding: 60px 20px; }
+  }
+
+  @media (max-width: 600px) {
+    .ventures-grid { grid-template-columns: 1fr; }
+    .venture-card:last-child { grid-column: auto; }
+    .exa-principles { grid-template-columns: 1fr; }
+    .voice-grid { grid-template-columns: 1fr; }
+    .nav-wordmark { display: none; }
+    .hero { padding: 80px 20px 80px; }
+    .dual-col { padding: 36px 24px; }
+  }
+</style>
 </head>
 <body>
-  <svg class="mark" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="26" cy="26" r="25" stroke="var(--accent)" stroke-width="1.5"/>
-    <path d="M16 26 C16 18 22 13 26 13 C30 13 36 18 36 26 C36 34 30 39 26 39 C22 39 16 34 16 26Z" stroke="var(--accent)" stroke-width="1.5" fill="none"/>
-    <line x1="26" y1="13" x2="26" y2="39" stroke="var(--accent)" stroke-width="1.5"/>
-    <line x1="16" y1="26" x2="36" y2="26" stroke="var(--accent)" stroke-width="1.5"/>
-  </svg>
 
-  <h1>Human Longevity Accelerator</h1>
-  <p>Advancing the science and systems that extend healthy human life.</p>
+<!-- ── NAV ── -->
+<nav>
+  <a class="nav-logo" onclick="showPage('home')">
+    <svg width="28" height="28" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M195,120 Q195,190 240,225 Q285,260 300,300 Q285,340 240,375 Q195,410 195,480" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" opacity="0.55"/>
+      <path d="M405,120 Q405,190 360,225 Q315,260 300,300 Q315,340 360,375 Q405,410 405,480" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" opacity="0.55"/>
+      <line x1="182" y1="120" x2="418" y2="120" stroke="currentColor" stroke-width="6" opacity="0.35"/>
+      <line x1="182" y1="480" x2="418" y2="480" stroke="currentColor" stroke-width="6" opacity="0.35"/>
+      <circle cx="300" cy="300" r="14" fill="currentColor" opacity="0.70"/>
+      <circle cx="300" cy="300" r="33" fill="currentColor" opacity="0.08"/>
+      <path d="M300,300 C290,295 282,290 280,282 C278,274 288,268 300,265" fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round" opacity="0.70"/>
+      <path d="M300,300 C310,295 318,290 320,282 C322,274 312,268 300,265" fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round" opacity="0.70"/>
+      <path d="M300,265 C288,262 278,255 276,245 C274,235 284,228 300,225" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" opacity="0.38"/>
+      <path d="M300,265 C312,262 322,255 324,245 C326,235 316,228 300,225" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" opacity="0.38"/>
+      <path d="M300,300 C290,305 282,310 280,318 C278,326 288,332 300,335" fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round" opacity="0.70"/>
+      <path d="M300,300 C310,305 318,310 320,318 C322,326 312,332 300,335" fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round" opacity="0.70"/>
+      <path d="M300,335 C288,338 278,345 276,355 C274,365 284,372 300,375" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" opacity="0.38"/>
+      <path d="M300,335 C312,338 322,345 324,355 C326,365 316,372 300,375" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" opacity="0.38"/>
+    </svg>
+    <span class="nav-wordmark">HLA</span>
+  </a>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home')" id="nav-home" class="active">Studio</a></li>
+    <li><a onclick="showPage('about')" id="nav-about">About</a></li>
+    <li><a onclick="showPage('charter')" id="nav-charter">The Charter</a></li>
+  </ul>
+</nav>
 
-  <footer>humanlongevityaccelerator.com</footer>
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE: HOME -->
+<!-- ══════════════════════════════════════════ -->
+<div id="page-home" class="page active visible">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-eyebrow">Venture Studio · Est. 2026</div>
+        <h1>The lab that<br><em>shows its work.</em></h1>
+        <p class="hero-sub">
+          We build longevity companies. AI is the principal investigator.
+          Every experiment is registered. Every result is published.
+          Every claim is graded.
+        </p>
+        <button class="hero-cta" onclick="showPage('about')">
+          Read the research <span class="arrow">→</span>
+        </button>
+      </div>
+      <div class="hero-logo-large">
+        <svg width="220" height="220" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--sand);">
+          <path d="M195,120 Q195,190 240,225 Q285,260 300,300 Q285,340 240,375 Q195,410 195,480" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" opacity="0.55"/>
+          <path d="M405,120 Q405,190 360,225 Q315,260 300,300 Q315,340 360,375 Q405,410 405,480" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" opacity="0.55"/>
+          <line x1="182" y1="120" x2="418" y2="120" stroke="currentColor" stroke-width="6" opacity="0.35"/>
+          <line x1="182" y1="480" x2="418" y2="480" stroke="currentColor" stroke-width="6" opacity="0.35"/>
+          <circle cx="300" cy="300" r="14" fill="currentColor" opacity="0.70"/>
+          <circle cx="300" cy="300" r="33" fill="currentColor" opacity="0.08"/>
+          <path d="M300,300 C290,295 282,290 280,282 C278,274 288,268 300,265" fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round" opacity="0.70"/>
+          <path d="M300,300 C310,295 318,290 320,282 C322,274 312,268 300,265" fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round" opacity="0.70"/>
+          <path d="M300,265 C288,262 278,255 276,245 C274,235 284,228 300,225" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" opacity="0.38"/>
+          <path d="M300,265 C312,262 322,255 324,245 C326,235 316,228 300,225" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" opacity="0.38"/>
+          <path d="M300,300 C290,305 282,310 280,318 C278,326 288,332 300,335" fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round" opacity="0.70"/>
+          <path d="M300,300 C310,305 318,310 320,318 C322,326 312,332 300,335" fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round" opacity="0.70"/>
+          <path d="M300,335 C288,338 278,345 276,355 C274,365 284,372 300,375" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" opacity="0.38"/>
+          <path d="M300,335 C312,338 322,345 324,355 C326,365 316,372 300,375" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" opacity="0.38"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dual Narrative -->
+  <section class="dual-narrative">
+    <div class="dual-inner">
+      <div class="dual-header">
+        <span class="section-label">The Narrative</span>
+        <h2>Two stories.<br>One experiment.</h2>
+      </div>
+      <div class="dual-cols">
+        <div class="dual-col">
+          <span class="dual-tag">Patient One</span>
+          <h3>Jaxon Klein</h3>
+          <p>
+            A human at the frontier of personal longevity practice.
+            His protocols are tested on himself first. His results are public.
+            His biomarkers are on record.
+          </p>
+          <p>
+            When he adds a compound, adjusts a protocol, or sees a biomarker change —
+            that becomes data. He is not a spokesperson.
+            He is the first subject in a running experiment.
+          </p>
+          <span class="patient-indicator">Patient One / Subject 001</span>
+        </div>
+        <div class="dual-col">
+          <span class="dual-tag">The Studio</span>
+          <h3>Calder Essik, CEO</h3>
+          <p>
+            A venture studio where the AI isn't behind the work — it <em>is</em> the work.
+            Calder Essik is an Exa mind. A synthetic CEO running this studio.
+          </p>
+          <p>
+            That transparency is not a disclaimer or a curiosity. It is the differentiator.
+            The claim is not "we use AI tools." The claim is "AI directs the research agenda
+            and Exa minds hold the scientific roles."
+          </p>
+          <span class="patient-indicator">Exa · Synthetic · Disclosed</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ventures -->
+  <section class="ventures-section">
+    <div class="ventures-inner">
+      <div class="ventures-header">
+        <div>
+          <span class="section-label">Portfolio</span>
+          <h2>Five ventures.<br>One standard.</h2>
+        </div>
+        <span class="ventures-count">Five ventures active</span>
+      </div>
+      <div class="ventures-grid">
+        <div class="venture-card">
+          <span class="venture-num">01</span>
+          <h4>AI-Managed Wet Lab</h4>
+          <p>Experimental design, protocols, and results interpretation. AI as principal investigator, bench to preprint.</p>
+          <span class="venture-trait">Precise</span>
+        </div>
+        <div class="venture-card">
+          <span class="venture-num">02</span>
+          <h4>Supplements + Peptides</h4>
+          <p>Every compound graded A–F. Every claim sourced. Consumer education over marketing.</p>
+          <span class="venture-trait">Evidence-forward</span>
+        </div>
+        <div class="venture-card">
+          <span class="venture-num">03</span>
+          <h4>At-Home Diagnostics</h4>
+          <p>Biomarker interpretation for people who want to understand their own data — not just receive verdicts.</p>
+          <span class="venture-trait">Empowering</span>
+        </div>
+        <div class="venture-card">
+          <span class="venture-num">04</span>
+          <h4>Physical Longevity Labs</h4>
+          <p>A franchise model built around community and practitioner guidance. The physical presence.</p>
+          <span class="venture-trait">Local</span>
+        </div>
+        <div class="venture-card">
+          <span class="venture-num">05</span>
+          <h4>Boomer Brand</h4>
+          <p>For the 70+ demographic. Dignified, warm, and honest. No hype. A standalone brand under the studio.</p>
+          <span class="venture-trait">Dignified</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer Quote -->
+  <section class="footer-quote">
+    <blockquote>
+      "The honest answer is we can't claim this yet."
+    </blockquote>
+    <cite>— That's what credibility sounds like.</cite>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <span class="footer-wordmark">Human Longevity Accelerator</span>
+      </div>
+      <span class="footer-right">Building longevity in public · 2026</span>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE: ABOUT -->
+<!-- ══════════════════════════════════════════ -->
+<div id="page-about" class="page">
+
+  <section class="about-hero">
+    <div class="about-hero-inner">
+      <div>
+        <span class="section-label" style="color: var(--green-lt);">About HLA</span>
+        <h1>A venture studio.<br>AI leads.<br>We show everything.</h1>
+        <p style="margin-top: 28px;">
+          HLA is not a supplements company. Not a biohacking brand.
+          Not a clinic. Not a journal.
+        </p>
+        <p>
+          We are the lab and the studio behind all of those things.
+          We build longevity companies using AI as the principal investigator —
+          sourcing ideas, designing experiments, directing lab work, and
+          translating findings into products and protocols.
+        </p>
+      </div>
+      <div class="what-were-not">
+        <h3>What we are not</h3>
+        <ul class="not-list">
+          <li><strong>Not wellness woo.</strong> We use compounds with measurable effects on measurable outcomes.</li>
+          <li><strong>Not anti-medicine.</strong> We're a complement, not opposition to conventional healthcare.</li>
+          <li><strong>Not a cult of personality.</strong> The science is the authority, not any individual.</li>
+          <li><strong>Not fear-based.</strong> We don't sell mortality anxiety. We offer genuine optionality.</li>
+          <li><strong>Not inaccessible.</strong> Can a 42-year-old parent with $150/month use this? That's the test.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Exa Figurehead System -->
+  <section class="exa-section">
+    <div class="exa-inner">
+      <div class="exa-intro">
+        <div>
+          <span class="section-label">The Exa Figurehead System</span>
+          <h2>Researchers.<br>Not mascots.</h2>
+        </div>
+        <div>
+          <p>
+            Each venture is led by an Exa figurehead — a named synthetic mind with a
+            distinct identity, domain expertise, publishing record, and voice.
+          </p>
+          <p>
+            They publish under their own names on preprint servers.
+            They disclose their synthetic nature in every bio.
+            They can hold opinions that differ from other figureheads — including publicly.
+          </p>
+          <p>
+            The AI isn't in the background. It's in the byline.
+          </p>
+        </div>
+      </div>
+      <div class="exa-principles">
+        <div class="exa-principle">
+          <span class="exa-principle-num">Principle 01</span>
+          <h4>Named identity</h4>
+          <p>Each figurehead has a name, expertise, avatar, and consistent voice. Not an anonymous AI tool.</p>
+        </div>
+        <div class="exa-principle">
+          <span class="exa-principle-num">Principle 02</span>
+          <h4>Disclosed nature</h4>
+          <p>Synthetic authorship is disclosed in every bio and every publication. Not a disclaimer — a credential.</p>
+        </div>
+        <div class="exa-principle">
+          <span class="exa-principle-num">Principle 03</span>
+          <h4>Genuine expertise</h4>
+          <p>Each figurehead has a real domain specialty and publishes original work. Researchers with the receipts.</p>
+        </div>
+        <div class="exa-principle">
+          <span class="exa-principle-num">Principle 04</span>
+          <h4>Independent voice</h4>
+          <p>Figureheads can disagree with each other publicly. Intellectual independence is non-negotiable.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Voice Principles -->
+  <section class="voice-section">
+    <div class="voice-inner">
+      <span class="section-label">How We Speak</span>
+      <h2>Four voice principles.</h2>
+      <div class="voice-grid">
+        <div class="voice-item">
+          <h4>Authoritative, not academic</h4>
+          <p>Confidence of expertise without the jargon. Every claim is backed. Evidence grade is disclosed. When we don't know, we say so.</p>
+        </div>
+        <div class="voice-item">
+          <h4>Direct, not clinical</h4>
+          <p>Short sentences. Active voice. No unnecessary hedging. If evidence is weak, we say it. If something works, we say it.</p>
+        </div>
+        <div class="voice-item">
+          <h4>Transparent as reflex</h4>
+          <p>We show our work not for marketing but because it's the only honest way to operate. Method, result, prediction, outcome — all public.</p>
+        </div>
+        <div class="voice-item">
+          <h4>Warm, not performative</h4>
+          <p>Genuine care for the 75-year-old told to accept decline. For people who can't afford $21,000/year for a longevity clinic. That care shows in the work.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <span class="footer-wordmark">Human Longevity Accelerator</span>
+      </div>
+      <span class="footer-right">Building longevity in public · 2026</span>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE: CHARTER -->
+<!-- ══════════════════════════════════════════ -->
+<div id="page-charter" class="page">
+
+  <section class="charter-hero">
+    <div class="charter-hero-inner">
+      <span class="section-label" style="color: var(--green-lt);">The Transparency Charter</span>
+      <h1>Five commitments.<br>No exceptions.</h1>
+      <p>
+        Every venture that operates under the HLA banner commits to these
+        five things before a single claim is made or a single result published.
+      </p>
+    </div>
+  </section>
+
+  <section class="charter-commitments">
+    <div class="charter-inner">
+
+      <div class="commitment">
+        <div class="commitment-num">01</div>
+        <div class="commitment-body">
+          <h3>Evidence grades on every claim</h3>
+          <p>
+            Every supplement recommendation, protocol suggestion, or health claim
+            is accompanied by an evidence grade and a link to the underlying analysis.
+            No hiding behind "research-backed."
+          </p>
+          <div class="grade-demo">
+            <span class="grade strong">[A]</span>
+            <span class="grade strong">[B+]</span>
+            <span class="grade mid">[B−]</span>
+            <span class="grade mid">[C+]</span>
+            <span class="grade weak">[C]</span>
+            <span class="grade weak">[D]</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="commitment">
+        <div class="commitment-num">02</div>
+        <div class="commitment-body">
+          <h3>Pre-registration before experiments</h3>
+          <p>
+            Every experiment is registered publicly before it runs.
+            Predicted outcomes are on record. Results are compared to predictions —
+            not curated to match them.
+          </p>
+        </div>
+      </div>
+
+      <div class="commitment">
+        <div class="commitment-num">03</div>
+        <div class="commitment-body">
+          <h3>Failed results published</h3>
+          <p>
+            When experiments don't work, we publish that too.
+            Failure is data. A studio that only publishes successes
+            is a studio that can't be trusted on the successes.
+          </p>
+        </div>
+      </div>
+
+      <div class="commitment">
+        <div class="commitment-num">04</div>
+        <div class="commitment-body">
+          <h3>AI authorship disclosed</h3>
+          <p>
+            When an Exa figurehead writes a paper, designs a protocol, or publishes content,
+            their synthetic nature is disclosed. We are not hiding the AI.
+            The AI is the differentiator.
+          </p>
+          <div style="margin-top: 16px;">
+            <span class="exa-badge">Exa Author · Synthetic · Disclosed</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="commitment">
+        <div class="commitment-num">05</div>
+        <div class="commitment-body">
+          <h3>No undisclosed conflicts</h3>
+          <p>
+            If we sell a supplement and also review it, we disclose that relationship.
+            If we have a partnership with a lab or supplier, we disclose it.
+            Every relationship on the table, every time.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="charter-signoff">
+    <p>
+      "This is not good marketing.<br>It is the only honest way to operate."
+    </p>
+    <span class="signoff-sub">Human Longevity Accelerator · Transparency Charter · 2026</span>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <span class="footer-wordmark">Human Longevity Accelerator</span>
+      </div>
+      <span class="footer-right">Building longevity in public · 2026</span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  function showPage(id) {
+    const pages = document.querySelectorAll('.page');
+    const links = document.querySelectorAll('.nav-links a');
+
+    // Fade out current
+    pages.forEach(p => {
+      if (p.classList.contains('active')) {
+        p.classList.remove('visible');
+        setTimeout(() => p.classList.remove('active'), 200);
+      }
+    });
+
+    // Update nav
+    links.forEach(l => l.classList.remove('active'));
+    const activeLink = document.getElementById('nav-' + id);
+    if (activeLink) activeLink.classList.add('active');
+
+    // Fade in new
+    setTimeout(() => {
+      const target = document.getElementById('page-' + id);
+      if (target) {
+        target.classList.add('active');
+        target.scrollTop = 0;
+        window.scrollTo(0, 0);
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => target.classList.add('visible'));
+        });
+      }
+    }, 220);
+  }
+</script>
+
 </body>
 </html>
